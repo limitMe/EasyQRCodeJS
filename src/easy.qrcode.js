@@ -1378,23 +1378,22 @@
          * Drawing QRCode by using canvas
          * 
          * @constructor
-         * @param {HTMLElement} el
+         * @param {CanvasRenderingContext2D} context
          * @param {Object} htOption QRCode Options 
          */
-        var Drawing = function(el, htOption) {
+        var Drawing = function(context, htOption) {
             this._bIsPainted = false;
             this._android = _getAndroid();
-            this._el = el;
+            this._context = context;
             this._htOption = htOption;
+            this._elCanvas = context.canvas;
 
             if (this._htOption.drawer == 'svg') {
                 this._oContext = {};
                 this._elCanvas = {};
             } else {
                 // canvas
-                this._elCanvas = document.createElement("canvas");
-                this._el.appendChild(this._elCanvas);
-                this._oContext = this._elCanvas.getContext("2d");
+                this._oContext = this._context;
                 // this._elImage = document.createElement("img");
                 // this._elImage.alt = "Scan me!";
                 // this._elImage.style.display = "none";
@@ -1772,7 +1771,7 @@
         Drawing.prototype.remove = function() {
             this._oContext.clearRect(0, 0, this._elCanvas.width, this._elCanvas.height);
             this._bIsPainted = false;
-            this._el.innerHTML = '';
+            this._context.innerHTML = '';
         };
 
         /**
@@ -1852,7 +1851,7 @@
     }
 
 
-    QRCode = function(el, vOption) {
+    QRCode = function(context, vOption) {
         this._htOption = {
             width: 256,
             height: 256,
@@ -2029,23 +2028,20 @@
         }
 
         this._htOption.height = this._htOption.height + this._htOption.titleHeight;
-        if (typeof el == "string") {
-            el = document.getElementById(el);
-        }
 
         if (!this._htOption.drawer || (this._htOption.drawer != 'svg' && this._htOption.drawer != 'canvas')) {
             this._htOption.drawer = 'canvas';
         }
 
         this._android = _getAndroid();
-        this._el = el;
+        this._context = context;
         this._oQRCode = null;
 
         var _htOptionClone = {};
         for (var i in this._htOption) {
             _htOptionClone[i] = this._htOption[i];
         }
-        this._oDrawing = new Drawing(this._el, _htOptionClone);
+        this._oDrawing = new Drawing(this._context, _htOptionClone);
 
         if (this._htOption.text) {
             this.makeCode(this._htOption.text);
@@ -2062,9 +2058,6 @@
         this._oQRCode = new QRCodeModel(_getTypeNumber(sText, this._htOption), this._htOption.correctLevel);
         this._oQRCode.addData(sText, this._htOption.binary);
         this._oQRCode.make();
-        if (this._htOption.tooltip) {
-            this._el.title = sText;
-        }
         this._oDrawing.draw(this._oQRCode);
         //		this.makeImage();
     };

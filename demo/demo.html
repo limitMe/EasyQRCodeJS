@@ -558,6 +558,10 @@
 				container.innerHTML+=qrcodeHTML;
 			}
 			for (var i = 0; i < demoParams.length; i++) {
-				 var t=new QRCode(document.getElementById("qrcode_"+i), demoParams[i].config);
+				var dom = document.getElementById("qrcode_"+i);
+				var elCanvas = document.createElement("canvas");
+        dom.appendChild(elCanvas);
+        var oContext = elCanvas.getContext("2d");
+				var t = new QRCode(oContext, demoParams[i].config);
 			}
 		</script>
