@@ -1,3 +1,7 @@
+经尝试这个改法并不working, 保留项目作为备忘
+
+It doesn't working after many tryings.
+
 # EasyQRCode by context
 
 标准的 EasyQRCode 要求传入一个 DOM 对象，但是微信小程序、支付宝小程序无法操作 DOM，但是提供了获取 canvas context 的功能，比如支付宝端的 my.createCanvasContext()。所以将 EasyQRCode 简单修改后，允许传入一个 context，使得微信和支付宝小程序能够使用 EasyQRCode 的强大功能。
